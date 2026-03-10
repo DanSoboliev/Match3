@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Match-3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at center, #1f2933, #020617 60%);
+        color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .game-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px 20px;
+        background: rgba(15, 23, 42, 0.95);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+      }
+
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        width: 100%;
+        gap: 16px;
+      }
+
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+      }
+
+      .status {
+        font-size: 14px;
+        color: #9ca3af;
+      }
+
+      .status span {
+        color: #e5e7eb;
+        font-weight: 500;
+      }
+
+      canvas {
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        background: radial-gradient(circle at top, #0b1120, #020617 70%);
+        cursor: pointer;
+      }
+
+      .hint {
+        font-size: 13px;
+        color: #9ca3af;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="game-wrapper">
+      <div class="game-header">
+        <div class="title">Match-3</div>
+        <div class="status">Count: <span id="score">0</span></div>
+      </div>
+      <canvas id="game" width="512" height="512"></canvas>
+    </div>
+
+    <script src="./dist/main.js"></script>
+  </body>
+</html>
