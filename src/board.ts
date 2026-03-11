@@ -1,4 +1,4 @@
-import { ROWS, COLS, TILE_TYPES, Tile, TileType, MatchResult, CellPos } from "./types.js";
+import { ROWS, COLS, TILE_TYPES, Tile, TileType, MatchResult, CellPos, MovingTile } from "./types.js";
 
 export class Board {
   private grid: Tile[][] = [];
@@ -9,6 +9,25 @@ export class Board {
 
   get tiles(): Tile[][] {
     return this.grid;
+  }
+
+  getInitialSpawnMoves(): MovingTile[] {
+    const moves: MovingTile[] = [];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const tile = this.grid[r][c];
+        if (tile !== null) {
+          moves.push({
+            fromRow: -1,
+            fromCol: c,
+            toRow: r,
+            toCol: c,
+            tile
+          });
+        }
+      }
+    }
+    return moves;
   }
 
   swap(a: CellPos, b: CellPos): void {
@@ -86,12 +105,22 @@ export class Board {
     }
   }
 
-  applyGravity(): void {
+  applyGravity(): MovingTile[] {
+    const moves: MovingTile[] = [];
     for (let c = 0; c < COLS; c++) {
       let writeRow = ROWS - 1;
       for (let r = ROWS - 1; r >= 0; r--) {
         const tile = this.grid[r][c];
         if (tile !== null) {
+          if (writeRow !== r) {
+            moves.push({
+              fromRow: r,
+              fromCol: c,
+              toRow: writeRow,
+              toCol: c,
+              tile
+            });
+          }
           this.grid[writeRow][c] = tile;
           if (writeRow !== r) {
             this.grid[r][c] = null;
@@ -100,9 +129,18 @@ export class Board {
         }
       }
       for (let r = writeRow; r >= 0; r--) {
-        this.grid[r][c] = this.randomTile();
+        const tile = this.randomTile();
+        this.grid[r][c] = tile;
+        moves.push({
+          fromRow: -1,
+          fromCol: c,
+          toRow: r,
+          toCol: c,
+          tile
+        });
       }
     }
+    return moves;
   }
 
   private initWithoutMatches(): void {
@@ -149,3 +187,4 @@ export class Board {
     return false;
   }
 }
+

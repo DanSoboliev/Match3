@@ -16,3 +16,11 @@ export interface MatchResult {
   toClear: boolean[][];
   clearedCount: number;
 }
+
+export interface MovingTile {
+  fromRow: number;
+  fromCol: number;
+  toRow: number;
+  toCol: number;
+  tile: TileType;
+}

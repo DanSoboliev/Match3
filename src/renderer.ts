@@ -1,4 +1,4 @@
-import { ROWS, COLS, Tile, TileType, CellPos } from "./types.js";
+import { ROWS, COLS, Tile, TileType, CellPos, MovingTile } from "./types.js";
 
 export class Renderer {
   private readonly canvas: HTMLCanvasElement;
@@ -37,19 +37,36 @@ export class Renderer {
     return { row, col };
   }
 
-  draw(board: Tile[][], selected: CellPos | null): void {
+  draw(
+    board: Tile[][],
+    selected: CellPos | null,
+    movingTiles: MovingTile[] = [],
+    progress: number = 1
+  ): void {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    const blocked = new Set<string>();
+    for (const move of movingTiles) {
+      blocked.add(`${move.fromRow}:${move.fromCol}`);
+      blocked.add(`${move.toRow}:${move.toCol}`);
+    }
+
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
+        if (blocked.has(`${r}:${c}`)) continue;
         this.drawTile(r, c, board[r][c]);
       }
     }
-
     this.drawGrid();
     if (selected) {
       this.highlightCell(selected);
+    }
+
+    for (const move of movingTiles) {
+      const row = move.fromRow + (move.toRow - move.fromRow) * progress;
+      const col = move.fromCol + (move.toCol - move.fromCol) * progress;
+      this.drawTile(row, col, move.tile);
     }
   }
 
@@ -189,3 +206,4 @@ export class Renderer {
     ctx.restore();
   }
 }
+
